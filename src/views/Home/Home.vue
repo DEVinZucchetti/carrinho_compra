@@ -3,7 +3,7 @@
 
   <button @click="this.$store.dispatch('alterarNome', { nome: 'douglas' })">Cliquei</button>
   <div class="list-products">
-    <v-card width="300px" class="pa-2 mb-2" v-for="product in products" :key="product.id">
+    <v-card width="300px" class="pa-2 mb-2" v-for="product in produtosRestantes" :key="product.id">
       <v-img
         :src="product.imagem"
         class="align-end"
@@ -43,15 +43,12 @@ export default {
   },
   computed: {
     produtosRestantes() {
-        /*
-        console.log( this.products.filter((product) =>
-        this.$store.state.produtosCarrinho.some((item) => item.id === product.id)
-      ))
-      
-       return this.products.filter((product) =>
-        this.$store.state.produtosCarrinho.some((item) => item.id === product.id)
-      )
-      */
+     
+      return this.products.filter((product) => {
+        const itemExiste = this.$store.state.produtosCarrinho.find((item) => item.id === product.id)
+        if (itemExiste) return false
+        return true
+      })
     }
   },
   mounted() {
