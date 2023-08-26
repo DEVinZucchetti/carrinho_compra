@@ -1,4 +1,4 @@
-import {createStore} from 'vuex'
+import { createStore } from 'vuex'
 
 const store = createStore({
     state() {
@@ -8,12 +8,35 @@ const store = createStore({
         }
     },
     mutations: {
-      alterarTeste(state, value){
-        state.teste = value
-      },
-      adicionarProdutoAoCarrinho(state, value) {
-        state.produtosCarrinho = [...state.produtosCarrinho, value]
-      }
+        alterarTeste(state, value) {
+            state.teste = value
+        },
+        adicionarProdutoAoCarrinho(state, produtoRecebido) {
+
+            const produtoNoCarrinho = state.produtosCarrinho.find(produto => produto.id === produtoRecebido.id)
+
+            if (produtoNoCarrinho) {
+
+                state.produtosCarrinho = state.produtosCarrinho.map(item => {
+                    if (item.id === produtoRecebido.id) {
+                        item.quantidade = item.quantidade + 1
+                    }
+                    return item
+                })
+
+            } else {
+                state.produtosCarrinho = [
+                    ...state.produtosCarrinho,
+                    {
+                        ...produtoRecebido,
+                        quantidade: 1
+                    }
+                ]
+            }
+
+
+
+        }
     },
     actions: {
         alterarNome(context, value) {
@@ -22,8 +45,6 @@ const store = createStore({
             context.commit("alterarTeste", value.nome)
         },
         adicionarProduto(context, value) {
-            console.log("entrei dentro do adicionarProduto")
-            console.log(value.product)
             context.commit("adicionarProdutoAoCarrinho", value.product)
         }
     }
